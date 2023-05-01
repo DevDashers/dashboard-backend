@@ -119,6 +119,19 @@ app.delete('/resources/:resourceId', async(request, response, next) => {
     }
 });
 
+app.put('/resources/:resourceId', async (request, response, next)=>{
+    try {
+        let id = request.params.resourceId;
+        let resourceData = request.body;
+
+        let updatedResource = await Resources.findByIdAndUpdate(id, resourceData, {new: true, overwrite:true});
+
+        response.status(200).send(updatedResource)
+    } catch (error) {
+        next(error)
+    }
+})
+
 
 
 app.get('*', (request, response) => {
