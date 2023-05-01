@@ -12,6 +12,7 @@ const app = express();
 
 // MIDDLEWARE
 app.use(cors());
+app.use(express.json());
 
 // Port connection
 const PORT = process.env.PORT || process.env.PORT2;
