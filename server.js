@@ -11,7 +11,7 @@ const app = express();
 
 // MIDDLEWARE
 app.use(cors());
-app.use(express.json())
+app.use(express.json() )
 
 // Port connection
 const PORT = process.env.PORT || process.env.PORT2;
@@ -73,9 +73,8 @@ app.put('/todo/:taskID', async (request, response, next)=>{
     try {
         let id = request.params.taskID;
         let todoData = request.body;
-        console.log(todoData);
 
-        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData, {new: true, runValidators:true});
+        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData, {new: true, overwrite:true});
 
         response.status(200).send(updatedTask)
     } catch (error) {
