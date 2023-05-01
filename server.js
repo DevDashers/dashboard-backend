@@ -11,6 +11,7 @@ const app = express();
 
 // MIDDLEWARE
 app.use(cors());
+app.use(express.json())
 
 // Port connection
 const PORT = process.env.PORT || process.env.PORT2;
@@ -50,15 +51,15 @@ app.post('/todo', async(request, response, next) => {
         let todoItem = request.body;
         let createdItem = await ToDo.create(todoItem);
 
-        response.status(201).send(createdItem);
+        response.status(200).send(createdItem);
     } catch (error) {
         next(error)
-    }
+    } 
 });
 
-app.deleteOne('/todo/:taskId', async(request, response, next) => {
+app.delete('/todo/:taskID', async(request, response, next) => {
     try {
-        let id = request.params.taskId;
+        let id = request.params.taskID;
         await ToDo.findByIdAndDelete(id);
 
         response.status(200).send(`Task with the ID of ${id} was deleted!`)
@@ -70,10 +71,11 @@ app.deleteOne('/todo/:taskId', async(request, response, next) => {
 
 app.put('/todo/:taskID', async (request, response, next)=>{
     try {
-        let id = request.params.taskId;
+        let id = request.params.taskID;
         let todoData = request.body;
+        console.log(todoData);
 
-        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData);
+        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData, {new: true, runValidators:true});
 
         response.status(200).send(updatedTask)
     } catch (error) {
