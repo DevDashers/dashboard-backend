@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const mongoose = require('mongoose');
 const ToDo = require('./models/todo.js');
+const Resources = require('./models/resources.js')
 
 const app = express();
 
@@ -80,6 +81,19 @@ app.put('/todo/:taskID', async (request, response, next)=>{
         next(error)
     }
 })
+
+//get resources
+
+app.get('/resources', async(request, response,next) => {
+    try {
+        let getResources = await Resources.find({});
+        response.status(200).send(getResources);
+    } catch (error) {
+        next(error);
+    }
+})
+
+
 
 
 app.get('*', (request, response) => {
