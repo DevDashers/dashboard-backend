@@ -6,7 +6,8 @@ const cors = require('cors');
 
 const mongoose = require('mongoose');
 const ToDo = require('./models/todo.js');
-const Resources = require('./models/resources.js')
+const Resources = require('./models/resources.js');
+const getMeme = require('./models/meme.js');
 
 const app = express();
 
@@ -118,7 +119,8 @@ app.delete('/resources/:resourceId', async(request, response, next) => {
     }
 });
 
-
+// Get Memes
+app.get('/meme', getMeme)
 
 app.get('*', (request, response) => {
     response.status(404).send('Not available');
