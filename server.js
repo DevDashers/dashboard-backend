@@ -13,6 +13,7 @@ const app = express();
 
 // MIDDLEWARE
 app.use(cors());
+app.use(express.json());
 
 // Port connection
 const PORT = process.env.PORT || process.env.PORT2;
@@ -118,6 +119,20 @@ app.delete('/resources/:resourceId', async(request, response, next) => {
         next(error)
     }
 });
+
+
+app.put('/resources/:resourceId', async (request, response, next)=>{
+    try {
+        let id = request.params.resourceId;
+        let resourceData = request.body;
+
+        let updatedResource = await Resources.findByIdAndUpdate(id, resourceData, {new: true, overwrite:true});
+
+        response.status(200).send(updatedResource)
+    } catch (error) {
+        next(error)
+    }
+})
 
 // Get Memes
 app.get('/meme', getMeme)
