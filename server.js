@@ -44,6 +44,44 @@ app.get('/todo', async(request, response,next) => {
     }
 })
 
+//create todo list item
+app.post('/todo', async(request, response, next) => {
+    try {
+        let todoItem = request.body;
+        let createdItem = await ToDo.create(todoItem);
+
+        response.status(201).send(createdItem);
+    } catch (error) {
+        next(error)
+    }
+});
+
+app.deleteOne('/todo/:taskId', async(request, response, next) => {
+    try {
+        let id = request.params.taskId;
+        await ToDo.findByIdAndDelete(id);
+
+        response.status(200).send(`Task with the ID of ${id} was deleted!`)
+        
+    } catch (error) {
+        next(error)
+    }
+});
+
+app.put('/todo/:taskID', async (request, response, next)=>{
+    try {
+        let id = request.params.taskId;
+        let todoData = request.body;
+
+        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData);
+
+        response.status(200).send(updatedTask)
+    } catch (error) {
+        next(error)
+    }
+})
+
+
 app.get('*', (request, response) => {
     response.status(404).send('Not available');
 });
