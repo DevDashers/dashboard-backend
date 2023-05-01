@@ -53,15 +53,17 @@ app.post('/todo', async(request, response, next) => {
         let todoItem = request.body;
         let createdItem = await ToDo.create(todoItem);
 
-        response.status(201).send(createdItem);
+        response.status(200).send(createdItem);
     } catch (error) {
         next(error)
-    }
+    } 
 });
 
-app.delete('/todo/:taskId', async(request, response, next) => {
+
+app.delete('/todo/:taskID', async(request, response, next) => {
+
     try {
-        let id = request.params.taskId;
+        let id = request.params.taskID;
         await ToDo.findByIdAndDelete(id);
 
         response.status(200).send(`Task with the ID of ${id} was deleted!`)
@@ -73,10 +75,10 @@ app.delete('/todo/:taskId', async(request, response, next) => {
 
 app.put('/todo/:taskID', async (request, response, next)=>{
     try {
-        let id = request.params.taskId;
+        let id = request.params.taskID;
         let todoData = request.body;
 
-        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData);
+        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData, {new: true, overwrite:true});
 
         response.status(200).send(updatedTask)
     } catch (error) {
