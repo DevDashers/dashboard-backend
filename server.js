@@ -94,6 +94,30 @@ app.get('/resources', async(request, response,next) => {
     }
 })
 
+//create resource item
+
+app.post('/resources', async(request, response, next) => {
+    try {
+        let resourceItem = request.body;
+        let createdResource = await Resources.create(resourceItem);
+
+        response.status(201).send(createdResource);
+    } catch (error) {
+        next(error)
+    }
+});
+
+app.delete('/resources/:resourceId', async(request, response, next) => {
+    try {
+        let id = request.params.resourceId;
+        await Resources.findByIdAndDelete(id);
+
+        response.status(200).send(`Resource with the ID of ${id} was deleted!`)
+        
+    } catch (error) {
+        next(error)
+    }
+});
 
 // Get Memes
 app.get('/meme', getMeme)
