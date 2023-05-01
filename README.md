@@ -25,6 +25,10 @@ This application uses `Axios`, `React`, `JSON`
 
 ## [Front End Repo](https://github.com/DevDashers/dashboard-frontend)
 
+## WireFrame
+
+![WireFrame](./assets/Wireframe.png)
+
 ## Domain Modeling
 
 ![Domain Modeling](./assets/DomainModeling.png)
