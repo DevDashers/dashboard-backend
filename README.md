@@ -24,3 +24,11 @@ This application uses `Axios`, `React`, `JSON`
 - [Donna Ada](https://github.com/donnaada)
 
 ## [Front End Repo](https://github.com/DevDashers/dashboard-frontend)
+
+## Domain Modeling
+
+![Domain Modeling](./assets/DomainModeling.png)
+
+## Data Schema
+
+![Data Schema](./assets/DataSchema.png)
