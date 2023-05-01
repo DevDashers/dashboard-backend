@@ -15,7 +15,6 @@ async function seed() {
 
   await ToDo.create({
     title: 'Create backend code',
-    description: 'work on backend code for final project',
     completed: false
   });
 
@@ -23,7 +22,6 @@ async function seed() {
 
   await ToDo.create({
     title: 'Create frontend code',
-    description: 'work on frontend code for final project',
     completed: false
   });
 
