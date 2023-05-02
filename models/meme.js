@@ -10,7 +10,7 @@ async function getMeme(request, response, next) {
         let memeURL = memeData.data.url;
         let memeAuthor = memeData.data.author;
         let memeArray = [memeTitle, memeAuthor, memeURL]
-        console.log(memeArray)
+        // console.log(memeArray)
         response.status(200).send(memeArray)
     } catch (error) {
         next(error);
