@@ -136,9 +136,22 @@ app.put('/resources/:resourceId', async (request, response, next)=>{
     }
 })
 
+// Get Calendar
+app.get('/calendar', async(request, response,next) => {
+    try {
+        let allTasks = await ToDo.find({});
+        let removeNullTasks = allTasks.filter(obj => obj.dueDate != null);
+        let removeCompleteTasks = removeNullTasks.filter(obj => obj.completed != true);
+        response.status(200).send(removeCompleteTasks);
+    } catch (error) {
+        next(error);
+    }
+})
+
 // Get Memes
 app.get('/meme', getMeme)
 
+// ERROR HANDLERS
 app.get('*', (request, response) => {
     response.status(404).send('Not available');
 });
@@ -147,4 +160,3 @@ app.use((error, request, response, next) => {
     console.log(error.message);
     response.status(500).send(error.message);
 });
-
