@@ -53,7 +53,7 @@ app.get('/todo', async(request, response) => {
 //create todo list item
 app.post('/todo', async(request, response) => {
     try {
-        console.log(request.user.email);
+        // console.log(request.user.email);
         const createdItem = await ToDo.create({...request.body, email: request.user.email});
         response.status(201).send(createdItem);
     } catch (error) {
@@ -132,18 +132,18 @@ app.put('/resources/:resourceId', async (request, response)=>{
     }
 })
 
-// Get Calendar
-app.get('/calendar', async(request, response) => {
-    try {
-        let allTasks = await ToDo.find({ email: request.user.email });
-        let removeNullTasks = allTasks.filter(obj => obj.dueDate != null);
-        let removeCompleteTasks = removeNullTasks.filter(obj => obj.completed != true);
-        response.status(200).send(removeCompleteTasks);
-    } catch (error) {
-        console.error(error);
-        response.status(500).send('server error');
-    }
-});
+// Get Calendar - NOT CURRENTLY IN USE - WILL PROBABLY REMOVE - LEAVING FOR NOW (JUST IN CASE)
+// app.get('/calendar', async(request, response) => {
+//     try {
+//         let allTasks = await ToDo.find({ email: request.user.email });
+//         let removeNullTasks = allTasks.filter(obj => obj.dueDate != null);
+//         let removeCompleteTasks = removeNullTasks.filter(obj => obj.completed != true);
+//         response.status(200).send(removeCompleteTasks);
+//     } catch (error) {
+//         console.error(error);
+//         response.status(500).send('server error');
+//     }
+// });
 
 // Get Memes
 app.get('/meme', getMeme)
