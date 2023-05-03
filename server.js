@@ -3,11 +3,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
 const mongoose = require('mongoose');
 const ToDo = require('./models/todo.js');
 const Resources = require('./models/resources.js');
 const getMeme = require('./models/meme.js');
+const verifyUser = require('./auth.js');
 
 const app = express();
 
@@ -37,80 +37,78 @@ app.get('/test', (request, response) => {
     response.send('Test request received!')
 });
 
+app.use(verifyUser);
+
 //get todo lists
-app.get('/todo', async(request, response,next) => {
+app.get('/todo', async(request, response) => {
     try {
-        let allTasks = await ToDo.find({});
+        const allTasks = await ToDo.find({ email: request.user.email });
         response.status(200).send(allTasks);
     } catch (error) {
-        next(error);
+        console.error(error);
+        response.status(500).send('server error');
     }
-})
+});
 
 //create todo list item
-app.post('/todo', async(request, response, next) => {
+app.post('/todo', async(request, response) => {
     try {
-        let todoItem = request.body;
-        let createdItem = await ToDo.create(todoItem);
-
-        response.status(200).send(createdItem);
+        console.log(request.user.email);
+        const createdItem = await ToDo.create({...request.body, email: request.user.email});
+        response.status(201).send(createdItem);
     } catch (error) {
-        next(error)
+        console.error(error);
+        response.status(500).send('server error');
     } 
 });
 
 
-app.delete('/todo/:taskID', async(request, response, next) => {
+app.delete('/todo/:taskID', async(request, response) => {
 
     try {
         let id = request.params.taskID;
         await ToDo.findByIdAndDelete(id);
-
         response.status(200).send(`Task with the ID of ${id} was deleted!`)
-        
     } catch (error) {
-        next(error)
+        console.error(error);
+        response.status(500).send('server error');
     }
 });
 
-app.put('/todo/:taskID', async (request, response, next)=>{
+app.put('/todo/:taskID', async (request, response)=>{
     try {
         let id = request.params.taskID;
-        let todoData = request.body;
-
-        let updatedTask = await ToDo.findByIdAndUpdate(id, todoData, {new: true, overwrite:true});
-
+        let updatedTask = await ToDo.findByIdAndUpdate(id, { ...request.body, email: request.user.email }, { new: true, overwrite: true });
         response.status(200).send(updatedTask)
     } catch (error) {
-        next(error)
-    }
-})
-
-//get resources
-
-app.get('/resources', async(request, response,next) => {
-    try {
-        let getResources = await Resources.find({});
-        response.status(200).send(getResources);
-    } catch (error) {
-        next(error);
-    }
-})
-
-//create resource item
-
-app.post('/resources', async(request, response, next) => {
-    try {
-        let resourceItem = request.body;
-        let createdResource = await Resources.create(resourceItem);
-
-        response.status(201).send(createdResource);
-    } catch (error) {
-        next(error)
+        console.error(error);
+        response.status(500).send('server error');
     }
 });
 
-app.delete('/resources/:resourceId', async(request, response, next) => {
+//get resources
+app.get('/resources', async(request, response) => {
+    try {
+        let getResources = await Resources.find({ email: request.user.email });
+        response.status(200).send(getResources);
+    } catch (error) {
+        console.error(error);
+        response.status(500).send('server error');
+    }
+});
+
+//create resource item
+app.post('/resources', async(request, response) => {
+    try {
+        let createdResource = await Resources.create({...request.body, email: request.user.email});
+        response.status(201).send(createdResource);
+    } catch (error) {
+        console.error(error);
+        response.status(500).send('server error');
+    }
+});
+
+app.delete('/resources/:resourceId', async(request, response) => {
     try {
         let id = request.params.resourceId;
         await Resources.findByIdAndDelete(id);
@@ -118,35 +116,34 @@ app.delete('/resources/:resourceId', async(request, response, next) => {
         response.status(200).send(`Resource with the ID of ${id} was deleted!`)
         
     } catch (error) {
-        next(error)
+        console.error(error);
+        response.status(500).send('server error');
     }
 });
 
-
-app.put('/resources/:resourceId', async (request, response, next)=>{
+app.put('/resources/:resourceId', async (request, response)=>{
     try {
         let id = request.params.resourceId;
-        let resourceData = request.body;
-
-        let updatedResource = await Resources.findByIdAndUpdate(id, resourceData, {new: true, overwrite:true});
-
+        let updatedResource = await Resources.findByIdAndUpdate(id, { ...request.body, email: request.user.email }, { new: true, overwrite: true });
         response.status(200).send(updatedResource)
     } catch (error) {
-        next(error)
+        console.error(error);
+        response.status(500).send('server error');
     }
 })
 
 // Get Calendar
-app.get('/calendar', async(request, response,next) => {
+app.get('/calendar', async(request, response) => {
     try {
-        let allTasks = await ToDo.find({});
+        let allTasks = await ToDo.find({ email: request.user.email });
         let removeNullTasks = allTasks.filter(obj => obj.dueDate != null);
         let removeCompleteTasks = removeNullTasks.filter(obj => obj.completed != true);
         response.status(200).send(removeCompleteTasks);
     } catch (error) {
-        next(error);
+        console.error(error);
+        response.status(500).send('server error');
     }
-})
+});
 
 // Get Memes
 app.get('/meme', getMeme)
