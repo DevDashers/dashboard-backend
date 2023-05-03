@@ -8,7 +8,7 @@ const oneDay = 24 * 60 * 60 * 1000; // 1 day in miliseconds
 
 const todoSchema = new Schema({
     task: {type: String, required: true},
-    dueDate: {type: Date, required: false, default:() => Date.now() + oneDay},
+    dueDate: {type: String, required: false},
     completed: {type: Boolean, required: true, default:false},
     email: {type: String}  
 });
