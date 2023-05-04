@@ -7,7 +7,7 @@ const cacheData = async (response, key, apiUrl, Constructor, daysCached) => {
   let milliseconds  = daysCached * 24 * 60 * 60 * 1000;
 
   if (cache[key] && (Date.now() - cache[key].timestamp) < milliseconds) {
-    console.log('Cache hit', cache);
+    // console.log('Cache hit', cache);
     let date = new Date(cache[key].timestamp);
     let formattedDate = date.toString();
     response.status(200).send([cache[key].data, formattedDate]);
@@ -20,8 +20,8 @@ const cacheData = async (response, key, apiUrl, Constructor, daysCached) => {
     let dataFromApi = await axios.get(apiUrl);
     let dataToSend = new Constructor(dataFromApi.data);
     
-    console.log('dataFromApi', dataFromApi);
-    console.log('dataToSend', dataToSend);
+    // console.log('dataFromApi', dataFromApi);
+    // console.log('dataToSend', dataToSend);
 
 
     cache[key] ={
