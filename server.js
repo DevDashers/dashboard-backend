@@ -10,6 +10,7 @@ const getMeme = require('./models/meme.js');
 const verifyUser = require('./auth.js');
 
 const app = express();
+const { getWeatherData } = require('./models/weather');
 
 // MIDDLEWARE
 app.use(cors());
@@ -40,7 +41,7 @@ app.get('/test', (request, response) => {
 app.use(verifyUser);
 
 //get todo lists
-app.get('/todo', async(request, response) => {
+app.get('/todo', async (request, response) => {
     try {
         const allTasks = await ToDo.find({ email: request.user.email });
         response.status(200).send(allTasks);
@@ -51,19 +52,20 @@ app.get('/todo', async(request, response) => {
 });
 
 //create todo list item
-app.post('/todo', async(request, response) => {
+app.post('/todo', async (request, response) => {
     try {
         // console.log(request.user.email);
-        const createdItem = await ToDo.create({...request.body, email: request.user.email});
+        const createdItem = await ToDo.create({ ...request.body, email: request.user.email });
         response.status(201).send(createdItem);
     } catch (error) {
         console.error(error);
         response.status(500).send('server error');
-    } 
+    }
 });
 
 
-app.delete('/todo/:taskID', async(request, response) => {
+
+app.delete('/todo/:taskID', async (request, response) => {
 
     try {
         let id = request.params.taskID;
@@ -75,7 +77,7 @@ app.delete('/todo/:taskID', async(request, response) => {
     }
 });
 
-app.put('/todo/:taskID', async (request, response)=>{
+app.put('/todo/:taskID', async (request, response) => {
     try {
         let id = request.params.taskID;
         let updatedTask = await ToDo.findByIdAndUpdate(id, { ...request.body, email: request.user.email }, { new: true, overwrite: true });
@@ -87,7 +89,7 @@ app.put('/todo/:taskID', async (request, response)=>{
 });
 
 //get resources
-app.get('/resources', async(request, response) => {
+app.get('/resources', async (request, response) => {
     try {
         let getResources = await Resources.find({ email: request.user.email });
         response.status(200).send(getResources);
@@ -98,9 +100,9 @@ app.get('/resources', async(request, response) => {
 });
 
 //create resource item
-app.post('/resources', async(request, response) => {
+app.post('/resources', async (request, response) => {
     try {
-        let createdResource = await Resources.create({...request.body, email: request.user.email});
+        let createdResource = await Resources.create({ ...request.body, email: request.user.email });
         response.status(201).send(createdResource);
     } catch (error) {
         console.error(error);
@@ -108,20 +110,20 @@ app.post('/resources', async(request, response) => {
     }
 });
 
-app.delete('/resources/:resourceId', async(request, response) => {
+app.delete('/resources/:resourceId', async (request, response) => {
     try {
         let id = request.params.resourceId;
         await Resources.findByIdAndDelete(id);
 
         response.status(200).send(`Resource with the ID of ${id} was deleted!`)
-        
+
     } catch (error) {
         console.error(error);
         response.status(500).send('server error');
     }
 });
 
-app.put('/resources/:resourceId', async (request, response)=>{
+app.put('/resources/:resourceId', async (request, response) => {
     try {
         let id = request.params.resourceId;
         let updatedResource = await Resources.findByIdAndUpdate(id, { ...request.body, email: request.user.email }, { new: true, overwrite: true });
@@ -129,6 +131,14 @@ app.put('/resources/:resourceId', async (request, response)=>{
     } catch (error) {
         console.error(error);
         response.status(500).send('server error');
+    }
+})
+
+app.get('/weather', (req, res, next) => {
+    try {
+        getWeatherData(res);
+    } catch (error) {
+        next(error)
     }
 })
 
