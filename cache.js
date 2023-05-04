@@ -14,7 +14,7 @@ const cacheData = async (response, key, apiUrl, Constructor, daysCached) => {
 
   } else {
 
-    console.log('Cache miss', cache);
+    // console.log('Cache miss', cache);
 
 
     let dataFromApi = await axios.get(apiUrl);
