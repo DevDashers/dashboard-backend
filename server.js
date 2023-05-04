@@ -142,19 +142,6 @@ app.get('/weather', (req, res, next) => {
     }
 })
 
-// Get Calendar - NOT CURRENTLY IN USE - WILL PROBABLY REMOVE - LEAVING FOR NOW (JUST IN CASE)
-// app.get('/calendar', async(request, response) => {
-//     try {
-//         let allTasks = await ToDo.find({ email: request.user.email });
-//         let removeNullTasks = allTasks.filter(obj => obj.dueDate != null);
-//         let removeCompleteTasks = removeNullTasks.filter(obj => obj.completed != true);
-//         response.status(200).send(removeCompleteTasks);
-//     } catch (error) {
-//         console.error(error);
-//         response.status(500).send('server error');
-//     }
-// });
-
 // Get Memes
 app.get('/meme', getMeme)
 
