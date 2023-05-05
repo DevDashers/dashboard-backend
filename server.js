@@ -6,6 +6,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const ToDo = require('./models/todo.js');
 const Resources = require('./models/resources.js');
+const City = require('./models/city.js');
 const getMeme = require('./models/meme.js');
 const verifyUser = require('./auth.js');
 
@@ -54,7 +55,6 @@ app.get('/todo', async (request, response) => {
 //create todo list item
 app.post('/todo', async (request, response) => {
     try {
-        // console.log(request.user.email);
         const createdItem = await ToDo.create({ ...request.body, email: request.user.email });
         response.status(201).send(createdItem);
     } catch (error) {
@@ -136,9 +136,43 @@ app.put('/resources/:resourceId', async (request, response) => {
 
 app.get('/weather', (req, res, next) => {
     try {
-        getWeatherData(res);
+        getWeatherData(req, res);
     } catch (error) {
         next(error)
+    }
+})
+
+// Read
+app.get('/city', async (request, response, next) => {
+    try {
+        let getCity = await City.find({ email: request.user.email });
+        response.status(200).send(getCity);
+    } catch (error) {
+        next(error);
+        response.status(500).send(error.message);
+    }
+});
+
+//Create
+app.post('/city', async (request, response, next) => {
+    try {
+        let userCity = await City.create({ ...request.body, email: request.user.email });
+        response.status(201).send(userCity);
+    } catch (error) {
+        next(error);
+        response.status(500).send(error.message);
+    }
+});
+
+//Update
+app.put('/city/:cityId', async (request, response, next) => {
+    try {
+        let id = request.params.cityId;
+        let updatedCity = await City.findByIdAndUpdate(id, { ...request.body, email: request.user.email }, { new: true, overwrite: true });
+        response.status(200).send(updatedCity)
+    } catch (error) {
+        next(error);
+        response.status(500).send(error.message);
     }
 })
 
@@ -151,6 +185,6 @@ app.get('*', (request, response) => {
 });
 
 app.use((error, request, response, next) => {
-    console.log(error.message);
+    next(error);
     response.status(500).send(error.message);
 });

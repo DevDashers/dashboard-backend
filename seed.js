@@ -7,7 +7,7 @@ require('dotenv').config();
 mongoose.connect(process.env.DB_URL);
 
 
-const Resources = require('./models/resources.js');
+const City = require('./models/city.js');
 
 async function seed() {
   // title: {type: String, required: true},
@@ -18,13 +18,19 @@ async function seed() {
   // description: { type: String, required: false },
   // url: { type: String, required: true },
 
-  await Resources.create({
-    title: 'Create backend code',
-    description: 'desc',
-    url: 'https://www.codewars.com/'
+    // city: { type: String, required: true },
+    // lat: { type: String, required: true },
+    // lon: { type: String, required: true },
+    // email: { type: String }
+
+  await City.create({
+    city: 'Saipan',
+    lat: '15.1909825',
+    lon: '145.746743003024',
+    email: "dmada.edp@gmail.com"
   });
 
-  console.log('Task 1 was created');
+  console.log('City was added');
 
   // await ToDo.create({
   //   title: 'Create frontend code',
