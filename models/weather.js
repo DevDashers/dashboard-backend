@@ -3,31 +3,27 @@
 let { cacheData } = require('../cache');
 
 class Weather {
-    constructor(weatherObj) {
-        console.log(weatherObj)
-        this.city = weatherObj.location.name;
-        this.description = weatherObj.current.condition.text;
-        this.icons = weatherObj.current.condition.icon;
-        this.feelsLikeF = weatherObj.current.feelslike_f;
-        this.tempF = weatherObj.current.temp_f;
-        this.lastUpdated = weatherObj.current.last_updated;
-    }
+  constructor(weatherObj) {
+    this.city = weatherObj.city_name;
+    this.date = weatherObj.ob_time;
+    this.description = weatherObj.weather.description;
+    this.icon = weatherObj.weather.icon;
+    this.iconPath = `https://cdn.weatherbit.io/static/img/icons/${weatherObj.weather.icon}.png`;
+    this.feelsLike = weatherObj.app_temp;
+    this.temp = weatherObj.temp;
+  }
 }
 
-const getWeatherData = async (response, request, next) => {
-    try {
-        const currentDate = new Date().toISOString().slice(0, 10);
-        let key = `weather-${currentDate}`;
-        const url = `http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API}&q=auto:ip`;
-
-        //response, key, apiUrl, Constructor, daysCached
-        cacheData(response, key, url, Weather, 1);
-
-    } catch (error) {
-        // next(error);
-        next('>>>', error);
-    }
+const getWeatherData = async (request, response) => {
+  let lon = request.query.lon;
+  let lat = request.query.lat;
+  const key = `weather-lat${lat}-lon${lon}`;
+  const url = `http://api.weatherbit.io/v2.0/current?key=${process.env.REACT_APP_WEATHERBIT_API_KEY}&lang=en&lat=${lat}&lon=${lon}&units=I`;
+  cacheData(response, key, url, 'data', Weather, 0.5);
 
 };
 
+
+
 module.exports = { getWeatherData };
+
